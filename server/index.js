@@ -9,9 +9,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, "..", "public")));
 
 function clientFile(fileName) {
-
+ 
   return path.join(__dirname, "..", "public", "client", fileName);
-
 }
 
 app.get("/", (req, res) => res.sendFile(clientFile("index.html")));
@@ -20,13 +19,12 @@ app.get("/about", (req, res) => res.sendFile(clientFile("about.html")));
 
 app.get("/feature", (req, res) => res.sendFile(clientFile("feature.html")));
 
-app.get("/about.html", (req, res) => res.redirect("/about"));
+app.get("/about.html", (req, res) => res.sendFile(clientFile("about.html")));
 
-app.get("/feature.html", (req, res) => res.redirect("/feature"));
-
-app.get("/index.html", (req, res) => res.redirect("/"));
+app.get("/feature.html", (req, res) => res.sendFile(clientFile("feature.html")));
 
 app.get("/api/health", (req, res) => {
+ 
   res.json({ status: "ok", message: "Server is healthy" });
 });
 
