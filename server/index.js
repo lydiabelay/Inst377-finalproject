@@ -14,6 +14,13 @@ app.get("/feature", (req,res) => {
   path.join(__dirname, "..", "public","client","feature.html")
 );
  });
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "ok",
+    message: "Server is healthy"
+  });
+});
+
 app.listen(PORT, () => {
 console.log(`Server is running on port ${PORT}`);
 });
