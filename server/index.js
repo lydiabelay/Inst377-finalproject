@@ -9,11 +9,18 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 app.get("/", (req, res) => { res.sendFile( path.join(__dirname, "..","public","client","index.html")
   );
                         });
+app.get("/about", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "client", "about.html"));
+});
+
 app.get("/feature", (req,res) => { 
   res.sendFile (
   path.join(__dirname, "..", "public","client","feature.html")
 );
  });
+
+
+
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
