@@ -26,8 +26,20 @@
       const input = document.getElementById("cityInput");
       const result = document.getElementById("result");
 
-      button.addEventListener("click",function() {
+      /* testing backend api */
+      fetch("/api/health")
+  .then((res) => res.json())
+  .then((data) => {
+    console.log("Health check:", data);
+  })
+  .catch((err) => {
+    console.log("Health check failed:", err);
+  });
 
+button.addEventListener("click", function () {
+
+
+  
         const city = input.value.trim();
 
         if(city==="") {
