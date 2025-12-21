@@ -30,13 +30,14 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Server is healthy" });
 });
 
+app.get("/api/sample", (req, res) => {
+  res.json({
+    city: "Baltimore",
+    temperature: "72°F",
+    airQuality: "Good"
+  });
+});
+
 app.listen(PORT, () => {
- app.get("/api/sample", (req, res) => {
-    res.json({
-city: "Baltimore",
-     temperature: "72°F",
-     airQuality: "Good"
-});
-});
   console.log(`Server is running on port ${PORT}`);
 });
