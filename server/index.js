@@ -1,14 +1,8 @@
-import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
-import "dotenv/config";
 import { createClient } from "@supabase/supabase-js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, "..", "public", "client")));
 
@@ -90,7 +84,20 @@ app.get("/api/outdoor", async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+=======
+app.get("/api/sample", (req, res) => {
+  res.json({
+    city: "Baltimore",
+    temperature: "72°F",
+    airQuality: "Good"
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+>>>>>>> c0ce4f3beb63a56b8a25a7a540c07b302524a3e7
 });
 
