@@ -25,36 +25,39 @@
     
    <button id="checkBtn">Check The Conditions</button>
 
-<h2>Safety Tips</h2>
-<div id="tips"></div>
-
 <h2>Result</h2>
 <div id="result"></div>
 
+<h2>Safety Tips</h2>
+<div id="tips">Loading safety tips...</div>
 
 
-   <script>
-  async function loadQuotes() {
-    try {
-      const res = await fetch("/api/quotes");
-      if (!res.ok) throw new Error("Quotes API failed");
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tipsDiv = document.getElementById("tips");
 
-      const quotes = await res.json();
+    async function loadQuotes() {
+      try {
+        const res = await fetch("/api/quotes");
+        if (!res.ok) throw new Error(`Quotes API returned ${res.status}`);
 
-      const tipsDiv = document.getElementById("tips");
-      tipsDiv.innerHTML = "<h3>Safety Tips</h3>";
+        const quotes = await res.json();
 
-      quotes.forEach((q) => {
-        const p = document.createElement("p");
-        p.textContent = q.text;
-        tipsDiv.appendChild(p);
-      });
-    } catch (err) {
-      console.error("Error loading quotes:", err);
+        tipsDiv.innerHTML = ""; 
+
+        quotes.forEach((q) => {
+          const p = document.createElement("p");
+          p.textContent = q.text;
+          tipsDiv.appendChild(p);
+        });
+      } catch (err) {
+        tipsDiv.textContent = "Could not load safety tips.";
+        console.error("Quotes fetch failed:", err);
+      }
     }
-  }
 
-  window.addEventListener("DOMContentLoaded", loadQuotes);
+    loadQuotes();
+  });
 </script>
 
     <script>
