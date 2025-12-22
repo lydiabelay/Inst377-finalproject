@@ -28,6 +28,14 @@ Repository:
 https://github.com/lydiabelay/Inst377-finalproject
 
 ## Developer Manual
+## This will run the application locally 
+
+```bash
+npm install
+npm start
+```
+
+
 
 ## Overview
 
