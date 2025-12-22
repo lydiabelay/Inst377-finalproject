@@ -84,10 +84,6 @@ app.get("/api/outdoor", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-=======
 app.get("/api/sample", (req, res) => {
   res.json({
     city: "Baltimore",
@@ -98,6 +94,4 @@ app.get("/api/sample", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
->>>>>>> c0ce4f3beb63a56b8a25a7a540c07b302524a3e7
-});
 
