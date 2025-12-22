@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Outdoor Safety Checker</title>
+  </head>
+  <body>
+    <nav>
+      <a href="/">Home</a> | <a href="/about">About</a> | <a href="/feature">Feature</a>
+    </nav>
+
+    <h1>Outdoor Safety Checker</h1>
+    <p>Please enter a city name to check the outdoor conditions (weather + air quality).</p>
+
+    <label for="cityInput">City:</label>
+    <input id="cityInput" type="text" placeholder="Baltimore" />
+    <button id="checkBtn">Check The Conditions</button>
+
+    <h2>Result</h2>
+    <div id="result"></div>
+
+    <script>
+
+fetch("/api/health")
+  .then((res) => res.json())
+  .then((data) => console.log("Health:", data))
+  .catch((err) => console.log("Health fetch failed:", err));
+
+
+
+
+
+      const input = document.getElementById("cityInput");
+      const button = document.getElementById("checkBtn");
+      const result = document.getElementById("result");
+
+        const city = input.value.trim();
+
+        if (city === "") {
+          result.textContent = "Please enter a city name.";
+          return;
+        }
+
+        result.textContent = "Loading...";
+
+        try {
+          const res = await fetch(`/api/outdoor?city=${encodeURIComponent(city)}`);
+          if (!res.ok) throw new Error("Outdoor API failed");
+
+          const data = await res.json();
+
+          result.innerHTML = `
+            <p><strong>City:</strong> ${data.city}</p>
+            <p><strong>Temperature:</strong> ${data.temperature_f}°F</p>
+            <p><strong>Air Quality:</strong> ${data.air_quality}</p>
+            <p><strong>AQI:</strong> ${data.aqi}</p>
+          `;
+        } catch (err) {
+          result.textContent = "Error fetching outdoor data.";
+        }
+      });
+    </script>
+  </body>
+</html>
+
+Ctrl + C
+
+
