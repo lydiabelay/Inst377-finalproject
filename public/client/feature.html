@@ -27,29 +27,27 @@
       const input = document.getElementById("cityInput");
       const result = document.getElementById("result");
 
-      /* testing backend api */
-      fetch("/api/health")
+fetch("/api/health")
   .then((res) => res.json())
   .then((data) => {
     console.log("Health check:", data);
   })
-
-fetch("/api/quotes")
-  .then(res => res.json())
-  .then(quotes => {
-    result.innerHTML = "<ul>" +
-      quotes.map(q => `<li>${q.text}</li>`).join("") +
-      "</ul>";
-  })
-  .catch(err => {
-    console.error("Quotes fetch failed", err);
-  });
-
-      
   .catch((err) => {
     console.log("Health check failed:", err);
   });
-      
+
+fetch("/api/quotes")
+  .then((res) => res.json())
+  .then((quotes) => {
+    result.innerHTML =
+      "<ul>" +
+      quotes.map((q) => `<li>${q.text}</li>`).join("") +
+      "</ul>";
+  })
+  .catch((err) => {
+    console.error("Quotes fetch failed", err);
+  });
+
 
 button.addEventListener("click", function () {
 
