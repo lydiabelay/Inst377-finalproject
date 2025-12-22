@@ -1,12 +1,18 @@
 <!doctype html>
+
 <html lang="en">
+ 
   <head>
     <meta charset="UTF-8" />
+   
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   
     <title>Outdoor Safety Checker</title>
   </head>
   <body>
+   
     <nav>
+ 
       <a href="/">Home</a> | <a href="/about">About</a> | <a href="/feature">Feature</a>
     </nav>
 
@@ -14,17 +20,53 @@
     <p>Please enter a city name to check the outdoor conditions (weather + air quality).</p>
 
     <label for="cityInput">City:</label>
+   
     <input id="cityInput" type="text" placeholder="Baltimore" />
+    
     <button id="checkBtn">Check The Conditions</button>
 
     <h2>Result</h2>
+
+    <div id="tips"></div>
+
     <div id="result"></div>
 
     <script>
+      async function loadQuotes() {
+        try {
+          const res = await fetch("/api/quotes");
+          
+          const quotes = await res.json();
+
+          const tipsDiv = document.getElementById("tips");
+          tipsDiv.innerHTML = "<h3>Safety Tips</h3>";
+
+          quotes.forEach((q) => {
+            
+            const p = document.createElement("p");
+           
+            p.textContent = q.text;
+            tipsDiv.appendChild(p);
+          });
+        } catch (err) {
+          console.error("Error loading quotes", err);
+        }
+      }
+
+      loadQuotes();
+    </script>
+
+    <script>
+    
       const input = document.getElementById("cityInput");
+    
       const button = document.getElementById("checkBtn");
+     
       const result = document.getElementById("result");
 
+      
+      button.addEventListener("click", async () => {
+      
         const city = input.value.trim();
 
         if (city === "") {
@@ -35,22 +77,29 @@
         result.textContent = "Loading...";
 
         try {
+       
           const res = await fetch(`/api/outdoor?city=${encodeURIComponent(city)}`);
+     
           if (!res.ok) throw new Error("Outdoor API failed");
 
           const data = await res.json();
 
           result.innerHTML = `
             <p><strong>City:</strong> ${data.city}</p>
+            
             <p><strong>Temperature:</strong> ${data.temperature_f}°F</p>
+          
             <p><strong>Air Quality:</strong> ${data.air_quality}</p>
+         
             <p><strong>AQI:</strong> ${data.aqi}</p>
           `;
         } catch (err) {
           result.textContent = "Error fetching outdoor data.";
         }
       });
-    </script>
-  </body>
-</html>
 
+    </script>
+
+  </body>
+
+</html>
