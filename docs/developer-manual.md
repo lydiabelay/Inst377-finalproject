@@ -131,4 +131,4 @@ Enhance error handling and messages to the user
 
 ## Summary
 
-This app is an exemplar of full stack web development using third party APIs, a cloud database and serverside logic. New developers can contribute by enhancing the UI and adding functions, as well as refining the backend.
+This app is an exempla of full stack web development using third party APIs, a cloud database and serverside logic. New developers can contribute by enhancing the UI and adding functions, as well as refining the backend.
