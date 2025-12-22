@@ -1,56 +1,57 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title> Feature </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Outdoor Safety Checker</title>
   </head>
   <body>
     <nav>
-  <a href="/">Home</a> |
-  <a href="/about">About</a> |
-  <a href="/feature">Feature</a>
-</nav>
-    
-    <h1> Outdoor Safety Checker </h1>
-    <p> Please enter a city name to check the outdoor conditions which is based on weather and air quality data </p>
-    <label>
-      City:
-      <input type="text" id="cityInput" placeholder="Example: Baltimore" />
+      <a href="/">Home</a> | <a href="/about">About</a> | <a href="/feature">Feature</a>
+    </nav>
 
-    </label>
-    <button id="checkBtn"> Check The Conditions</button>
-    <h2> Result</h2>
-    <div id="result"> No data yet.</div>
+    <h1>Outdoor Safety Checker</h1>
+    <p>Please enter a city name to check the outdoor conditions (weather + air quality).</p>
+
+    <label for="cityInput">City:</label>
+    <input id="cityInput" type="text" placeholder="Baltimore" />
+    <button id="checkBtn">Check The Conditions</button>
+
+    <h2>Result</h2>
+    <div id="result"></div>
+
     <script>
-      const button = document.getElementById("checkBtn");
       const input = document.getElementById("cityInput");
+      const button = document.getElementById("checkBtn");
       const result = document.getElementById("result");
 
-      /* testing backend api */
-      fetch("/api/health")
-  .then((res) => res.json())
-  .then((data) => {
-    console.log("Health check:", data);
-  })
-  .catch((err) => {
-    console.log("Health check failed:", err);
-  });
-
-button.addEventListener("click", function () {
-
-
-  
+      button.addEventListener("click", async () => {
         const city = input.value.trim();
 
-        if(city==="") {
+        if (city === "") {
           result.textContent = "Please enter a city name.";
           return;
         }
-        result.textContent=
-          "Showing outdoor conditions for " + city + ". (The API data will be here)";
-      });
 
+        result.textContent = "Loading...";
+
+        try {
+          const res = await fetch(`/api/outdoor?city=${encodeURIComponent(city)}`);
+          if (!res.ok) throw new Error("Outdoor API failed");
+
+          const data = await res.json();
+
+          result.innerHTML = `
+            <p><strong>City:</strong> ${data.city}</p>
+            <p><strong>Temperature:</strong> ${data.temperature_f}°F</p>
+            <p><strong>Air Quality:</strong> ${data.air_quality}</p>
+            <p><strong>AQI:</strong> ${data.aqi}</p>
+          `;
+        } catch (err) {
+          result.textContent = "Error fetching outdoor data.";
+        }
+      });
     </script>
   </body>
 </html>
+
