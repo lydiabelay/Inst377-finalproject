@@ -23,42 +23,39 @@
    
     <input id="cityInput" type="text" placeholder="Baltimore" />
     
-    <button id="checkBtn">Check The Conditions</button>
+   <button id="checkBtn">Check The Conditions</button>
 
-    <h2>Result</h2>
+<h2>Safety Tips</h2>
+<div id="tips"></div>
 
-    <div id="tips"></div>
-
-    <div id="result"></div>
-
-
-    <script>
+<h2>Result</h2>
+<div id="result"></div>
 
 
-     
-      async function loadQuotes() {
-        try {
-          const res = await fetch("/api/quotes");
-          
-          const quotes = await res.json();
 
-          const tipsDiv = document.getElementById("tips");
-          tipsDiv.innerHTML = "<h3>Safety Tips</h3>";
+   <script>
+  async function loadQuotes() {
+    try {
+      const res = await fetch("/api/quotes");
+      if (!res.ok) throw new Error("Quotes API failed");
 
-          quotes.forEach((q) => {
-            
-            const p = document.createElement("p");
-           
-            p.textContent = q.text;
-            tipsDiv.appendChild(p);
-          });
-        } catch (err) {
-          console.error("Error loading quotes", err);
-        }
-      }
+      const quotes = await res.json();
 
-      loadQuotes();
-    </script>
+      const tipsDiv = document.getElementById("tips");
+      tipsDiv.innerHTML = "<h3>Safety Tips</h3>";
+
+      quotes.forEach((q) => {
+        const p = document.createElement("p");
+        p.textContent = q.text;
+        tipsDiv.appendChild(p);
+      });
+    } catch (err) {
+      console.error("Error loading quotes:", err);
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", loadQuotes);
+</script>
 
     <script>
     
