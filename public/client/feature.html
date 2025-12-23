@@ -8,6 +8,12 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
     <title>Outdoor Safety Checker</title>
   </head>
 
@@ -32,6 +38,10 @@
 
     <h2>Result</h2>
     <div id="result">No data yet.</div>
+
+   <h2 data-aos="fade-up">Air Quality Chart</h2>
+<canvas id="aqiChart" width="400" height="200"></canvas>
+   
 
     <h2>Safety Tips</h2>
     <div id="tips">Loading safety tips...</div>
@@ -87,6 +97,32 @@
 
           const data = await res.json();
 
+         const ctx = document.getElementById("aqiChart").getContext("2d");
+
+if (window.aqiChart) {
+  window.aqiChart.destroy();
+}
+
+window.aqiChart = new Chart(ctx, {
+  type: "bar",
+  
+ data: {
+ 
+   labels: ["AQI"],
+    datasets: [
+    
+     {
+        label: "Air Quality Index",
+        
+       data: [data.aqi],
+      
+      backgroundColor: "rgba(75, 192, 192, 0.6)",
+      },
+   
+    ],
+  },
+});
+
           result.innerHTML = `
             <p><strong>City:</strong> ${data.city}</p>
             
@@ -100,8 +136,11 @@
           result.textContent = "Error fetching outdoor data.";
        
           console.error(err);
+
         }
-      });
+      });     AOS.init();
+
+    
     </script>
 
   </body>
