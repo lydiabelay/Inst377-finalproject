@@ -47,101 +47,88 @@
     <div id="tips">Loading safety tips...</div>
 
     <script>
-      async function loadQuotes() {
-      
-        const tipsDiv = document.getElementById("tips");
-      
-        try {
-          const res = await fetch("/api/quotes");
-     
-          if (!res.ok) throw new Error("Quotes API failed");
+  AOS.init();
 
-          const quotes = await res.json();
+  async function loadQuotes() {
+    const tipsDiv = document.getElementById("tips");
 
-          tipsDiv.innerHTML = "";
-          quotes.forEach((q) => {
-            const p = document.createElement("p");
-            p.textContent = q.text;
-            tipsDiv.appendChild(p);
-          });
-        } catch (err) {
-     
-          tipsDiv.textContent = "Could not load safety tips.";
-         
-          console.error(err);
-        }
+    try {
+      const res = await fetch("/api/quotes");
+      if (!res.ok) throw new Error("Quotes API failed");
+
+      const quotes = await res.json();
+
+      tipsDiv.innerHTML = "";
+      quotes.forEach((q) => {
+        const p = document.createElement("p");
+        p.textContent = q.text;
+        tipsDiv.appendChild(p);
+      });
+    } catch (err) {
+      tipsDiv.textContent = "Could not load safety tips.";
+      console.error(err);
+    }
+  }
+
+  loadQuotes();
+
+  const input = document.getElementById("cityInput");
+  const button = document.getElementById("checkBtn");
+  const result = document.getElementById("result");
+
+  button.addEventListener("click", async () => {
+    const city = input.value.trim();
+
+    if (!city) {
+      result.textContent = "Please enter a city name.";
+      return;
+    }
+
+    result.textContent = "Loading...";
+
+    try {
+      const res = await fetch(`/api/outdoor?city=${encodeURIComponent(city)}`);
+      if (!res.ok) throw new Error("Outdoor API failed");
+
+      const data = await res.json();
+
+      result.innerHTML = `
+        <p><strong>City:</strong> ${data.city}</p>
+        <p><strong>Temperature:</strong> ${data.temperature_f}°F</p>
+        <p><strong>Air Quality:</strong> ${data.air_quality}</p>
+        <p><strong>AQI:</strong> ${data.aqi}</p>
+      `;
+
+      const canvas = document.getElementById("aqiChart");
+      const ctx = canvas.getContext("2d");
+
+      if (window.aqiChart && typeof window.aqiChart.destroy === "function") {
+        window.aqiChart.destroy();
       }
 
-      loadQuotes();
-
-      const input = document.getElementById("cityInput");
-     
-      const button = document.getElementById("checkBtn");
-     
-      const result = document.getElementById("result");
-
-      button.addEventListener("click", async () => {
-        const city = input.value.trim();
-
-        if (!city) {
-      
-          result.textContent = "Please enter a city name.";
-          return;
-        }
-
-        result.textContent = "Loading...";
-
-        try {
-          const res = await fetch(`/api/outdoor?city=${encodeURIComponent(city)}`);
-          if (!res.ok) throw new Error("Outdoor API failed");
-
-          const data = await res.json();
-
-         const ctx = document.getElementById("aqiChart").getContext("2d");
-
-if (window.aqiChart) {
-  window.aqiChart.destroy();
-}
-
-window.aqiChart = new Chart(ctx, {
-  type: "bar",
-  
- data: {
- 
-   labels: ["AQI"],
-    datasets: [
-    
-     {
-        label: "Air Quality Index",
-        
-       data: [data.aqi],
-      
-      backgroundColor: "rgba(75, 192, 192, 0.6)",
-      },
-   
-    ],
-  },
-});
-
-          result.innerHTML = `
-            <p><strong>City:</strong> ${data.city}</p>
-            
-            <p><strong>Temperature:</strong> ${data.temperature_f}°F</p>
-          
-            <p><strong>Air Quality:</strong> ${data.air_quality}</p>
-          
-            <p><strong>AQI:</strong> ${data.aqi}</p>
-          `;
-        } catch (err) {
-          result.textContent = "Error fetching outdoor data.";
-       
-          console.error(err);
-
-        }
-      });     AOS.init();
-
-    
-    </script>
-
+      window.aqiChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["AQI"],
+          datasets: [
+            {
+              label: "Air Quality Index",
+              data: [Number(data.aqi) || 0],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true },
+          },
+        },
+      });
+    } catch (err) {
+      result.textContent = "Error fetching outdoor data.";
+      console.error(err);
+    }
+  });
+</script>
   </body>
 </html>
