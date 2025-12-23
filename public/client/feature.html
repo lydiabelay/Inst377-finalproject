@@ -25,13 +25,11 @@
     <div id="tips">Loading safety tips...</div>
 
     <script>
-      // 1) Health check (fetch call #1)
       fetch("/api/health")
         .then((res) => res.json())
         .then((data) => console.log("Health:", data))
         .catch((err) => console.log("Health fetch failed:", err));
 
-      // 2) Load Safety Tips from Supabase (fetch call #2)
       async function loadQuotes() {
         const tipsDiv = document.getElementById("tips");
         try {
@@ -59,7 +57,6 @@
 
       loadQuotes();
 
-      // 3) Outdoor API (fetch call #3)
       const input = document.getElementById("cityInput");
       const button = document.getElementById("checkBtn");
       const result = document.getElementById("result");
