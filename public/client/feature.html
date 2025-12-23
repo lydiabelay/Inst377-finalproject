@@ -1,21 +1,33 @@
 <!doctype html>
+
 <html lang="en">
+ 
   <head>
+ 
     <meta charset="UTF-8" />
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Outdoor Safety Checker</title>
   </head>
 
   <body>
     <nav>
-      <a href="/">Home</a> | <a href="/about">About</a> | <a href="/feature">Feature</a>
+      <a href="/">Home</a> | 
+    
+      <a href="/about">About</a> | 
+      <a href="/feature">Feature</a>
     </nav>
 
     <h1>Outdoor Safety Checker</h1>
+   
     <p>Please enter a city name to check the outdoor conditions (weather + air quality).</p>
 
     <label for="cityInput">City:</label>
+  
     <input id="cityInput" type="text" placeholder="Baltimore" />
+
+    
     <button id="checkBtn">Check The Conditions</button>
 
     <h2>Result</h2>
@@ -25,23 +37,16 @@
     <div id="tips">Loading safety tips...</div>
 
     <script>
-      fetch("/api/health")
-        .then((res) => res.json())
-        .then((data) => console.log("Health:", data))
-        .catch((err) => console.log("Health fetch failed:", err));
-
       async function loadQuotes() {
+      
         const tipsDiv = document.getElementById("tips");
+      
         try {
           const res = await fetch("/api/quotes");
-          if (!res.ok) throw new Error(`Quotes API returned ${res.status}`);
+     
+          if (!res.ok) throw new Error("Quotes API failed");
 
           const quotes = await res.json();
-
-          if (!Array.isArray(quotes) || quotes.length === 0) {
-            tipsDiv.textContent = "No safety tips found yet.";
-            return;
-          }
 
           tipsDiv.innerHTML = "";
           quotes.forEach((q) => {
@@ -50,21 +55,26 @@
             tipsDiv.appendChild(p);
           });
         } catch (err) {
+     
           tipsDiv.textContent = "Could not load safety tips.";
-          console.error("Quotes fetch failed:", err);
+         
+          console.error(err);
         }
       }
 
       loadQuotes();
 
       const input = document.getElementById("cityInput");
+     
       const button = document.getElementById("checkBtn");
+     
       const result = document.getElementById("result");
 
       button.addEventListener("click", async () => {
         const city = input.value.trim();
 
         if (!city) {
+      
           result.textContent = "Please enter a city name.";
           return;
         }
@@ -73,21 +83,26 @@
 
         try {
           const res = await fetch(`/api/outdoor?city=${encodeURIComponent(city)}`);
-          if (!res.ok) throw new Error(`Outdoor API returned ${res.status}`);
+          if (!res.ok) throw new Error("Outdoor API failed");
 
           const data = await res.json();
 
           result.innerHTML = `
             <p><strong>City:</strong> ${data.city}</p>
-            <p><strong>Temperature:</strong> ${data.temperature_f ?? "N/A"}°F</p>
-            <p><strong>Air Quality:</strong> ${data.air_quality ?? "N/A"}</p>
-            <p><strong>AQI:</strong> ${data.aqi ?? "N/A"}</p>
+            
+            <p><strong>Temperature:</strong> ${data.temperature_f}°F</p>
+          
+            <p><strong>Air Quality:</strong> ${data.air_quality}</p>
+          
+            <p><strong>AQI:</strong> ${data.aqi}</p>
           `;
         } catch (err) {
-          console.error(err);
           result.textContent = "Error fetching outdoor data.";
+       
+          console.error(err);
         }
       });
     </script>
+
   </body>
 </html>
